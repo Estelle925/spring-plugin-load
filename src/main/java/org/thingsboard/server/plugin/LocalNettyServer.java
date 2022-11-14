@@ -43,23 +43,25 @@ public class LocalNettyServer {
         try {
             //使用链式编程来设置
             //设置两个线程组
-            bootstrap.group(bossGroup, workGroup)
-                    //使用NioSocketChannel作为服务器的通道实现
-                    .channel(NioServerSocketChannel.class)
-                    //设置线程队列得到的连接数
-                    .option(ChannelOption.SO_BACKLOG, 1024)
-                    //设置保持活动连接状态
-                    .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    //设置处理器  WorkerGroup 的 EvenLoop 对应的管道设置处理器
-                    .childHandler(new ChannelInitializer<>() {
-                        @Override
-                        protected void initChannel(Channel ch) {
-                            log.info("--------------有客户端连接");
-                            ch.pipeline().addLast(new StringDecoder());
-                            ch.pipeline().addLast(new StringEncoder());
-                            ch.pipeline().addLast(new LocalNettyServerHandler());
-                        }
-                    });
+            bootstrap.option(ChannelOption.SO_REUSEADDR, true);
+            bootstrap.group(bossGroup, workGroup);
+            //使用NioSocketChannel作为服务器的通道实现
+            bootstrap.channel(NioServerSocketChannel.class);
+            //设置线程队列得到的连接数
+            bootstrap.option(ChannelOption.SO_BACKLOG, 1024);
+            //
+            //设置保持活动连接状态
+            bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+            //设置处理器  WorkerGroup 的 EvenLoop 对应的管道设置处理器
+            bootstrap.childHandler(new ChannelInitializer<>() {
+                @Override
+                protected void initChannel(Channel ch) {
+                    log.info("--------------有客户端连接");
+                    ch.pipeline().addLast(new StringDecoder());
+                    ch.pipeline().addLast(new StringEncoder());
+                    ch.pipeline().addLast(new LocalNettyServerHandler());
+                }
+            });
             //绑定端口, 同步等待成功;
             ChannelFuture future = bootstrap.bind(DEFAULT_PORT).sync();
             log.info("localNetty服务启动成功，ip：{}，端口：{}", InetAddress.getLocalHost().getHostAddress(), DEFAULT_PORT);

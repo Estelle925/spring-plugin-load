@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +17,18 @@ import java.util.stream.Collectors;
 @Component
 public class PluginService {
 
-    @Autowired
+    @Resource
     private PluginLoader pluginLoader;
-    @Autowired
+    @Resource
     private PluginManager pluginManager;
+
+    @Resource
+    private PluginConfig pluginConfig;
 
     public void loadAndRegister(Path jarPath) {
         Plugin plugin = pluginLoader.load(jarPath);
         Plugin oldPlugin = pluginManager.register(plugin);
-//        destroyPlugin(oldPlugin);
+        log.warn("插件安装成功 plugin={}", oldPlugin);
     }
 
     public void removeAndDestroy(String pluginName, String pluginVersion) {

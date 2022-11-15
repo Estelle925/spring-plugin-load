@@ -22,9 +22,6 @@ public class PluginService {
     @Resource
     private PluginManager pluginManager;
 
-    @Resource
-    private PluginConfig pluginConfig;
-
     public void loadAndRegister(Path jarPath) {
         Plugin plugin = pluginLoader.load(jarPath);
         Plugin oldPlugin = pluginManager.register(plugin);

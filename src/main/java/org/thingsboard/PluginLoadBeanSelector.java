@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
-import org.thingsboard.EnablePluginLoadServer;
 import org.thingsboard.server.PluginAutoConfigurationRegistrar;
 import org.thingsboard.server.PluginLoader;
 import org.thingsboard.server.PluginManager;

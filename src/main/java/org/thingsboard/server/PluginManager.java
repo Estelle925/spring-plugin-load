@@ -11,7 +11,7 @@ import static lombok.Lombok.checkNotNull;
 
 @Slf4j
 @Component
-class PluginManager implements DisposableBean {
+public class PluginManager implements DisposableBean {
 
     /**
      * 已注册的所有模块

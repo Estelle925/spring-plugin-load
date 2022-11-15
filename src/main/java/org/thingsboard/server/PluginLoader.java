@@ -15,7 +15,7 @@ import java.util.ServiceLoader;
 
 @Slf4j
 @Component
-class PluginLoader implements ApplicationContextAware {
+public class PluginLoader implements ApplicationContextAware {
 
     /**
      * 注入父applicationContext

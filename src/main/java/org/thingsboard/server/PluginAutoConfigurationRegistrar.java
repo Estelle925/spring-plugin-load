@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Slf4j
-class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionRegistrar {
+public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionRegistrar {
 
 
     @Override

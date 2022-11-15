@@ -20,7 +20,9 @@ public class PluginService {
     private PluginLoader pluginLoader;
     @Resource
     private PluginManager pluginManager;
-
+    public PluginConfigVO preLoad(Path jarPath){
+        return pluginLoader.preLoad(jarPath);
+    }
     public void loadAndRegister(Path jarPath) {
         Plugin plugin = pluginLoader.load(jarPath);
         Plugin oldPlugin = pluginManager.register(plugin);

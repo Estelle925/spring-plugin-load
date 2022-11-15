@@ -18,15 +18,15 @@ public class PluginController {
 
 
     @GetMapping("install")
-    public void installPlugin() {
+    public void installPlugin(String path) {
 //        configurableApplicationContext.refresh();
-        pluginService.loadAndRegister(Paths.get("/Users/chenhaiming/workCode/EVISION/evision_iot_driver/evision-driver/tcp-driver/target/tcp-driver-3.4.1.jar"));
+        pluginService.loadAndRegister(Paths.get(path));
     }
 
 
     @GetMapping("unInstall")
-    public void unInstallPlugin() {
-        pluginService.removeAndDestroy("tcp-plugin", "1.0.0");
+    public void unInstallPlugin(String pluginName,String pluginVersion) {
+        pluginService.removeAndDestroy(pluginName, pluginVersion);
     }
 
 

@@ -40,7 +40,7 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
         //加载jar包
         if (CollectionUtil.isNotEmpty(jarPaths)) {
             for (String path : jarPaths) {
-                Path jarPath = Path.of(path);
+                Path jarPath = Paths.get(path);
                 try {
                     URL[] urls = new URL[]{jarPath.toUri().toURL()};
                     URLClassLoader urlClassLoader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());

@@ -23,6 +23,7 @@ public class PluginLoader implements ApplicationContextAware {
     @Setter
     private ApplicationContext applicationContext;
 
+    private PluginConfig pluginConfig;
     /**
      * 加载模块
      *
@@ -46,7 +47,7 @@ public class PluginLoader implements ApplicationContextAware {
         if (pluginConfigList.size() != 1) {
             throw new PluginRuntimeException("plugin config has and only has one");
         }
-        PluginConfig pluginConfig = pluginConfigList.get(0);
+
         pluginClassLoader.addOverridePackages(pluginConfig.overridePackages());
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         try {
@@ -68,6 +69,27 @@ public class PluginLoader implements ApplicationContextAware {
             // 还原当前线程的ClassLoader
             Thread.currentThread().setContextClassLoader(currentClassLoader);
         }
+    }
+
+    public PluginConfigVO preLoad(Path jarPath){
+        if (log.isInfoEnabled()) {
+            log.info("Start to load plugin: {}", jarPath);
+        }
+        PluginClassLoader pluginClassLoader;
+        try {
+            pluginClassLoader = new PluginClassLoader(jarPath.toUri().toURL(), applicationContext.getClassLoader());
+        } catch (MalformedURLException e) {
+            throw new PluginRuntimeException("create pluginClassLoader exception", e);
+        }
+
+        List<PluginConfig> pluginConfigList = new ArrayList<>();
+        ServiceLoader<PluginConfig> loadedDrivers = ServiceLoader.load(PluginConfig.class, pluginClassLoader);
+        loadedDrivers.forEach(pluginConfigList::add);
+        if (pluginConfigList.size() != 1) {
+            throw new PluginRuntimeException("plugin config has and only has one");
+        }
+        pluginConfig = pluginConfigList.get(0);
+        return PluginConfigVO.configToConfigVo(pluginConfig);
     }
 
 }

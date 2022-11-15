@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
+import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotationMetadata;
 
 import java.net.URL;
@@ -21,14 +23,13 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Slf4j
-public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionRegistrar {
+public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionRegistrar, EnvironmentAware {
 
-
+    String moduleJarAbsolutePath;
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
         //获取目录下jar包
         List<String> jarPaths = Lists.newArrayList();
-        String moduleJarAbsolutePath = "/Users/chenhaiming/data/tb/driver";
         try {
             Stream<Path> paths = Files.walk(Paths.get(moduleJarAbsolutePath), 2);
             paths.map(Path::toString).filter(f -> f.endsWith(".jar")).forEach(jarPaths::add);
@@ -70,4 +71,8 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
         }
     }
 
+    @Override
+    public void setEnvironment(Environment environment) {
+        moduleJarAbsolutePath = environment.getProperty("evisionos.plugin.loadPath");
+    }
 }

@@ -1,4 +1,4 @@
-package org.thingsboard.server;
+package evisionos.plugin.server;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;

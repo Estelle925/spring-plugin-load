@@ -1,4 +1,4 @@
-package org.thingsboard.server;
+package evisionos.plugin.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;

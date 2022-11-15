@@ -1,4 +1,4 @@
-package org.thingsboard.server;
+package evisionos.plugin.server;
 
 
 import com.google.common.collect.Sets;

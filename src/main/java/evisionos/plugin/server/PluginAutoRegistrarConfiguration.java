@@ -1,4 +1,4 @@
-package org.thingsboard.server;
+package evisionos.plugin.server;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

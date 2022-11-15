@@ -1,4 +1,4 @@
-package org.thingsboard.server;
+package evisionos.plugin.server;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.google.common.collect.Lists;

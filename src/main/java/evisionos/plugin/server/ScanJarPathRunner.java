@@ -1,4 +1,4 @@
-package org.thingsboard.server;
+package evisionos.plugin.server;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package org.thingsboard;
+package evisionos.plugin;
 
 import org.springframework.context.annotation.Import;
 

@@ -3,3 +3,8 @@ server:
 spring:
     application:
         name: plugin-demo
+
+## 插件加载地址
+evisionos:
+    plugin:
+        loadPath: /Users/chenhaiming/data/tb/driver/

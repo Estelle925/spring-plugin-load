@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>evision-plugin-load</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>plugin-demo</name>
+    <name>plugin-load</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -57,12 +57,10 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-tcnative-boringssl-static</artifactId>
-            <version>${netty-tcnative.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-tcnative-classes</artifactId>
-            <version>${netty-tcnative.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>

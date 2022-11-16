@@ -33,7 +33,7 @@ public abstract class PluginConfig {
     /**
      * 主题 例mqtt topic
      */
-    public abstract  String topic();
+    public abstract  String parameter();
 
     public Set<String> scanPackages() {
         return Sets.newHashSet(this.getClass().getPackage().getName());

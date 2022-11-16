@@ -31,7 +31,7 @@ public class PluginConfigVO {
     /**
      * 主题 例mqtt topic
      */
-    private String topic;
+    private String parameter;
 
     public static PluginConfigVO configToConfigVo(PluginConfig config) {
         PluginConfigVO configVO = new PluginConfigVO();
@@ -40,7 +40,7 @@ public class PluginConfigVO {
         configVO.setIp(config.ip());
         configVO.setPort(config.port());
         configVO.setProtocol(config.protocol());
-        configVO.setTopic(config.topic());
+        configVO.setParameter(config.parameter());
         configVO.setDesc(config.desc());
         return configVO;
     }

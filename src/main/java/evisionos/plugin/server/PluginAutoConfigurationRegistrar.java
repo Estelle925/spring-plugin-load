@@ -50,7 +50,7 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
                     loadedDrivers.forEach(pluginConfigList::add);
                     if (pluginConfigList.size() != 1) {
                         log.error("plugin config has and only has one");
-                        break;
+                        continue;
                     }
 
                     PluginConfig pluginConfig = pluginConfigList.get(0);
@@ -65,7 +65,6 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
                     log.info("Load plugin success: name={}, version={}, jarPath={}", pluginConfig.name(), pluginConfig.version(), jarPath);
                 } catch (Exception e) {
                     log.error(String.format("Load plugin exception, jarPath=%s", jarPath), e);
-                    break;
                 }
             }
         }

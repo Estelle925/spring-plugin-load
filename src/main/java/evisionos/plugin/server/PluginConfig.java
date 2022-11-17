@@ -1,38 +1,35 @@
 package evisionos.plugin.server;
 
-import com.google.common.collect.Sets;
-
-import java.util.Set;
-
 /**
  * @author chenhaiming
  */
-interface PluginConfig {
+public abstract class PluginConfig {
 
-    String name();
+    public abstract String name();
 
-    String version();
+    public abstract String version();
 
-    String desc();
+    public abstract String desc();
 
     /**
      * 使用ip,本地可不填写
      */
-    String ip();
+    public abstract String ip();
 
     /**
      * 端口
      */
-    Integer port();
+    public abstract Integer port();
 
     /**
      * 协议
      */
-    String protocol();
+    public abstract String protocol();
 
     /**
      * 主题 例mqtt topic
      */
-    String parameter();
+    public abstract String parameter();
+
 
 }

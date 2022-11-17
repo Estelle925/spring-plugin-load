@@ -62,7 +62,7 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
                             SpringUtils.registerBean(aClass,beanDefinitionRegistry);
                         }
                         if (SpringUtils.isSpringController(aClass)){
-                            SpringUtils.isSpringController(aClass);
+                            SpringUtils.registerController(aClass,beanDefinitionRegistry);
                         }
                     }
                     log.info("Load plugin success: name={}, version={}, jarPath={}", pluginConfig.name(), pluginConfig.version(), jarPath);

@@ -3,13 +3,12 @@ package evisionos.plugin.server;
 import cn.hutool.core.collection.CollectionUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.lang.NonNull;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -22,12 +21,15 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Stream;
 
+/**
+ * @author chenhaiming
+ */
 @Slf4j
 public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionRegistrar, EnvironmentAware {
 
     String moduleJarAbsolutePath;
     @Override
-    public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
+    public void registerBeanDefinitions(@NonNull AnnotationMetadata annotationMetadata,@NonNull BeanDefinitionRegistry beanDefinitionRegistry) {
         //获取目录下jar包
         List<String> jarPaths = Lists.newArrayList();
         try {
@@ -57,9 +59,10 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
                     Set<Class<?>> classes = ClassUtil.getClasses(urlClassLoader, path);
                     for (Class<?> aClass : classes) {
                         if (SpringUtils.isSpringBeanClass(aClass)) {
-                            BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(aClass);
-                            BeanDefinition beanDefinition = builder.getBeanDefinition();
-                            beanDefinitionRegistry.registerBeanDefinition(aClass.getName(), beanDefinition);
+                            SpringUtils.registerBean(aClass,beanDefinitionRegistry);
+                        }
+                        if (SpringUtils.isSpringController(aClass)){
+                            SpringUtils.isSpringController(aClass);
                         }
                     }
                     log.info("Load plugin success: name={}, version={}, jarPath={}", pluginConfig.name(), pluginConfig.version(), jarPath);

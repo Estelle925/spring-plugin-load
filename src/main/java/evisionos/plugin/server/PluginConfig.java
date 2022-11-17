@@ -7,40 +7,32 @@ import java.util.Set;
 /**
  * @author chenhaiming
  */
-public abstract class PluginConfig {
+interface PluginConfig {
 
-    public abstract String name();
+    String name();
 
-    public abstract String version();
+    String version();
 
-    public abstract String desc();
+    String desc();
 
     /**
      * 使用ip,本地可不填写
      */
-    public abstract  String ip();
+    String ip();
 
     /**
      * 端口
      */
-    public abstract  Integer port();
+    Integer port();
 
     /**
      * 协议
      */
-    public abstract  String protocol();
+    String protocol();
 
     /**
      * 主题 例mqtt topic
      */
-    public abstract  String parameter();
-
-    public Set<String> scanPackages() {
-        return Sets.newHashSet(this.getClass().getPackage().getName());
-    }
-
-    public Set<String> overridePackages() {
-        return Sets.newHashSet();
-    }
+    String parameter();
 
 }

@@ -1,5 +1,6 @@
 package evisionos.plugin.server;
 
+import com.google.common.collect.Sets;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.CachedIntrospectionResults;
@@ -48,7 +49,7 @@ public class PluginLoader implements ApplicationContextAware {
             throw new PluginRuntimeException("plugin config has and only has one");
         }
 
-        pluginClassLoader.addOverridePackages(pluginConfig.overridePackages());
+        pluginClassLoader.addOverridePackages(Sets.newHashSet());
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             // 把当前线程的ClassLoader切换成模块的
@@ -56,7 +57,7 @@ public class PluginLoader implements ApplicationContextAware {
             PluginApplicationContext pluginApplicationContext = new PluginApplicationContext();
             pluginApplicationContext.setParent(applicationContext);
             pluginApplicationContext.setClassLoader(pluginClassLoader);
-            pluginApplicationContext.scan(pluginConfig.scanPackages().toArray(new String[0]));
+            pluginApplicationContext.scan(Sets.newHashSet(pluginConfig.getClass().getPackage().getName()).toArray(new String[0]));
             pluginApplicationContext.refresh();
 
             log.info("Load plugin success: name={}, version={}, jarPath={}", pluginConfig.name(), pluginConfig.version(), jarPath);

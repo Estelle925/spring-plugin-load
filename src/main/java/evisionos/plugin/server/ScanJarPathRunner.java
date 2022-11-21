@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Slf4j
+@Deprecated
 class ScanJarPathRunner implements CommandLineRunner {
 
     @Setter

@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 @Slf4j
 @Component
 public class PluginService {
@@ -21,26 +23,39 @@ public class PluginService {
     private PluginLoader pluginLoader;
     @Resource
     private PluginManager pluginManager;
-    public PluginConfigVO preLoad(Path jarPath){
+
+    public PluginConfigVO preLoad(Path jarPath) {
         return pluginLoader.preLoad(jarPath);
     }
-    public void loadAndRegister(Path jarPath) {
-        Plugin plugin = pluginLoader.load(jarPath);
-        Plugin oldPlugin = pluginManager.register(plugin);
-        log.warn("插件安装成功 plugin={}", oldPlugin);
+
+    public boolean loadAndRegister(Path jarPath) {
+        try {
+            Plugin plugin = pluginLoader.load(jarPath);
+            Plugin oldPlugin = pluginManager.register(plugin);
+            log.warn("插件安装成功 plugin={}", oldPlugin);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
-    public void removeAndDestroy(String pluginName, String pluginVersion) {
-        Plugin plugin = pluginManager.remove(pluginName, pluginVersion);
-        destroyPlugin(plugin);
+    public boolean removeAndDestroy(String pluginName, String pluginVersion) {
+        try {
+            Plugin plugin = pluginManager.remove(pluginName, pluginVersion);
+            destroyPlugin(plugin);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     private void destroyPlugin(Plugin plugin) {
         if (Objects.nonNull(plugin)) {
             try {
                 plugin.destroy();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 log.error(String.format("Failed to destroy plugin: name=%s, version=%s", plugin.getPluginConfig().name(), plugin.getPluginConfig().version()), e);
+                throw new PluginRuntimeException("Failed to destroy plugin", e);
             }
         }
     }

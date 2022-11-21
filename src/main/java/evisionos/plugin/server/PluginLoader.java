@@ -1,6 +1,7 @@
 package evisionos.plugin.server;
 
 import com.google.common.collect.Sets;
+import evisionos.plugin.PluginConfig;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.CachedIntrospectionResults;
@@ -13,7 +14,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
-import evisionos.plugin.PluginConfig;
 @Slf4j
 @Component
 public class PluginLoader implements ApplicationContextAware {

@@ -1,7 +1,6 @@
 package evisionos.plugin.server;
 
 import cn.hutool.core.util.StrUtil;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.EnvironmentAware;

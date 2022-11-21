@@ -26,6 +26,7 @@ import java.util.stream.Stream;
  * @author chenhaiming
  */
 @Slf4j
+@Deprecated
 public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionRegistrar, EnvironmentAware {
 
     String moduleJarAbsolutePath;

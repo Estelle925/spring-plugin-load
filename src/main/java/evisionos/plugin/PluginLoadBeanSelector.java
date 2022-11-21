@@ -25,7 +25,7 @@ public class PluginLoadBeanSelector implements ImportSelector {
         selectors.add(PluginManager.class.getName());
         selectors.add(PluginService.class.getName());
         selectors.add(PluginController.class.getName());
-        selectors.add(PluginAutoConfigurationRegistrar.class.getName());
+//        selectors.add(PluginAutoConfigurationRegistrar.class.getName());
 
         return selectors.toArray(new String[]{});
     }

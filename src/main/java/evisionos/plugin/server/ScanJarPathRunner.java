@@ -14,9 +14,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * @author chenhaiming
+ */
 @Slf4j
 @Component
-class ScanJarPathRunner implements CommandLineRunner, EnvironmentAware {
+public class ScanJarPathRunner implements CommandLineRunner, EnvironmentAware {
 
 
     private String pluginJarAbsolutePath;

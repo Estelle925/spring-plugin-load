@@ -20,13 +20,13 @@ public class PluginController {
 
 
 
-    @GetMapping("plugin/install")
+    @GetMapping("/plugin/install")
     public void installPlugin(String path) {
         pluginService.loadAndRegister(Paths.get(path));
     }
 
 
-    @GetMapping("plugin/unInstall")
+    @GetMapping("/plugin/unInstall")
     public void unInstallPlugin(String pluginName,String pluginVersion) {
         pluginService.removeAndDestroy(pluginName, pluginVersion);
     }

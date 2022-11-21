@@ -31,5 +31,9 @@ public class PluginController {
         pluginService.removeAndDestroy(pluginName, pluginVersion);
     }
 
+    @GetMapping("/plugin/getAllPlugins")
+    public String getAllPlugins(){
+        return pluginService.queryAllPlugin();
+    }
 
 }

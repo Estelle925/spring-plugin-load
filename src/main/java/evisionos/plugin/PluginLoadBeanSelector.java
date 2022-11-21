@@ -21,10 +21,10 @@ public class PluginLoadBeanSelector implements ImportSelector {
         this.initEnableConfig(attrs);
 
         List<String> selectors = Lists.newArrayList();
-        selectors.add(SpringUtils.class.getName());
         selectors.add(PluginLoader.class.getName());
         selectors.add(PluginManager.class.getName());
         selectors.add(PluginService.class.getName());
+        selectors.add(PluginController.class.getName());
         selectors.add(PluginAutoConfigurationRegistrar.class.getName());
 
         return selectors.toArray(new String[]{});

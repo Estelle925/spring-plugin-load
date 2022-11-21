@@ -48,7 +48,7 @@ public class PluginLoader implements ApplicationContextAware {
         if (pluginConfigList.size() != 1) {
             throw new PluginRuntimeException("plugin config has and only has one");
         }
-
+        pluginConfig = pluginConfigList.get(0);
         pluginClassLoader.addOverridePackages(Sets.newHashSet());
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         try {

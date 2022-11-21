@@ -67,20 +67,11 @@ public class PluginService {
     }
 
     public String queryAllPlugin() {
-        List<pluginVO> result = pluginManager.allPlugins().stream().map(plugin -> {
+        List<PluginConfigVO> result = pluginManager.allPlugins().stream().map(plugin -> {
             PluginConfig pluginConfig = plugin.getPluginConfig();
-            return new pluginVO(pluginConfig.name(), pluginConfig.version(), pluginConfig.desc(), plugin.getJarPath().toString());
+            return PluginConfigVO.configToConfigVo(pluginConfig);
         }).collect(Collectors.toList());
         return GsonUtils.toJson(result);
-    }
-
-    @Data
-    @AllArgsConstructor
-    private static class pluginVO {
-        private String name;
-        private String version;
-        private String desc;
-        private String jarPath;
     }
 
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static lombok.Lombok.checkNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Slf4j
 @Component

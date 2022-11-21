@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
-
+import evisionos.plugin.api.PluginConfig;
 @Slf4j
 @Component
 public class PluginLoader implements ApplicationContextAware {

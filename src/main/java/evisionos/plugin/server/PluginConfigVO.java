@@ -1,5 +1,6 @@
 package evisionos.plugin.server;
 
+import evisionos.plugin.api.PluginConfig;
 import lombok.Data;
 
 /**

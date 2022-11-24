@@ -71,7 +71,7 @@ public class PluginLoader {
             Set<Class<?>> classes = ClassUtil.getClasses(pluginClassLoader, jarPath.toString());
             for (Class<?> aClass : classes) {
                 if (SpringUtils.isSpringController(aClass)) {
-                    SpringUtils.registerController(aClass.getSimpleName(),requestMappingHandlerMapping);
+                    SpringUtils.registerController(pluginApplicationContext.getBeanNamesForType(aClass)[0],requestMappingHandlerMapping);
                 }
             }
 

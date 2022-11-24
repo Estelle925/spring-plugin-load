@@ -29,16 +29,16 @@ import java.util.stream.Stream;
 @Deprecated
 public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionRegistrar, EnvironmentAware {
 
-    String moduleJarAbsolutePath;
+    String pluginJarAbsolutePath;
 
     @Override
     public void registerBeanDefinitions(@NonNull AnnotationMetadata annotationMetadata, @NonNull BeanDefinitionRegistry beanDefinitionRegistry) {
-        if (moduleJarAbsolutePath != null && !moduleJarAbsolutePath.isEmpty() && !moduleJarAbsolutePath.trim().isEmpty()) {
+        if (pluginJarAbsolutePath != null && !pluginJarAbsolutePath.isEmpty() && !pluginJarAbsolutePath.trim().isEmpty()) {
 
             //获取目录下jar包
             List<String> jarPaths = Lists.newArrayList();
             try {
-                Stream<Path> paths = Files.walk(Paths.get(moduleJarAbsolutePath), 2);
+                Stream<Path> paths = Files.walk(Paths.get(pluginJarAbsolutePath), 2);
                 paths.map(Path::toString).filter(f -> f.endsWith(".jar")).forEach(jarPaths::add);
                 paths.close();
             } catch (Exception e) {
@@ -66,9 +66,9 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
                             if (SpringUtils.isSpringBeanClass(aClass)) {
                                 SpringUtils.registerBean(aClass, beanDefinitionRegistry);
                             }
-                            if (SpringUtils.isSpringController(aClass)) {
-                                SpringUtils.registerController(aClass, beanDefinitionRegistry);
-                            }
+//                            if (SpringUtils.isSpringController(aClass)) {
+//                                SpringUtils.registerController(aClass, beanDefinitionRegistry);
+//                            }
                         }
                         log.info("Load plugin success: name={}, version={}, jarPath={}", pluginConfig.name(), pluginConfig.version(), jarPath);
                     } catch (Exception e) {
@@ -81,6 +81,6 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
 
     @Override
     public void setEnvironment(Environment environment) {
-        moduleJarAbsolutePath = environment.getProperty("evisionos.plugin.loadPath");
+        pluginJarAbsolutePath = environment.getProperty("evisionos.plugin.loadPath");
     }
 }

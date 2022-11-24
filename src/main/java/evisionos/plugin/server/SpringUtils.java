@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Method;
@@ -74,19 +76,30 @@ public class SpringUtils {
         beanDefinitionRegistry.registerBeanDefinition(aClass.getName(), beanDefinition);
     }
 
-    public static void registerController(Class<?> aClass, BeanDefinitionRegistry beanDefinitionRegistry) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(aClass);
-        BeanDefinition beanDefinition = builder.getBeanDefinition();
-        beanDefinitionRegistry.registerBeanDefinition(aClass.getSimpleName(), new RootBeanDefinition(aClass));
-
+    public static void unRegisterController(ApplicationContext applicationContext, Class<?> object) {
+        final RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
+        Object controller = applicationContext.getBean(object);
+        final Class<?> targetClass = controller.getClass();
+        ReflectionUtils.doWithMethods(targetClass, method -> {
+            Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
+            try {
+                Method createMappingMethod = RequestMappingHandlerMapping.class.getDeclaredMethod("getMappingForMethod", Method.class, Class.class);
+                createMappingMethod.setAccessible(true);
+                RequestMappingInfo requestMappingInfo = (RequestMappingInfo) createMappingMethod.invoke(requestMappingHandlerMapping, specificMethod, targetClass);
+                if (requestMappingInfo != null) {
+                    requestMappingHandlerMapping.unregisterMapping(requestMappingInfo);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, ReflectionUtils.USER_DECLARED_METHODS);
     }
 
-    public static void registerController(String controllerBeanName,RequestMappingHandlerMapping requestMappingHandlerMapping) throws Exception {
-        //注册Controller
+    public static void registerController(Object controller, RequestMappingHandlerMapping requestMappingHandlerMapping) throws Exception {
         Method method = requestMappingHandlerMapping.getClass().getSuperclass().getSuperclass().getDeclaredMethod("detectHandlerMethods", Object.class);
         //将private改为可使用
         method.setAccessible(true);
-        method.invoke(requestMappingHandlerMapping, controllerBeanName);
+        method.invoke(requestMappingHandlerMapping, controller);
     }
 
 

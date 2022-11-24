@@ -1,11 +1,13 @@
 package evisionos.plugin.server;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 /**
  * @author chenhaiming
@@ -16,6 +18,9 @@ public class PluginController {
 
     @Resource
     private PluginService pluginService;
+
+    @Resource
+    private ApplicationContext applicationContext;
 
 
 
@@ -32,7 +37,8 @@ public class PluginController {
 
     @GetMapping("/plugin/getAllPlugins")
     public String getAllPlugins(){
-        return pluginService.queryAllPlugin();
+       return Arrays.toString(applicationContext.getBeanDefinitionNames());
+//        return pluginService.queryAllPlugin();
     }
 
 }

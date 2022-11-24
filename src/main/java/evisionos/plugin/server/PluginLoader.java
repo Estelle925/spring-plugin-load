@@ -1,17 +1,20 @@
 package evisionos.plugin.server;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import evisionos.plugin.PluginConfig;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.CachedIntrospectionResults;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ public class PluginLoader {
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     private PluginConfig pluginConfig;
+
     /**
      * 加载模块
      *
@@ -61,6 +65,7 @@ public class PluginLoader {
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             // 把当前线程的ClassLoader切换成模块的
+            //注入bean
             Thread.currentThread().setContextClassLoader(pluginClassLoader);
             PluginApplicationContext pluginApplicationContext = new PluginApplicationContext();
             pluginApplicationContext.setParent(applicationContext);
@@ -68,15 +73,19 @@ public class PluginLoader {
             pluginApplicationContext.scan(Sets.newHashSet(pluginConfig.getClass().getPackage().getName()).toArray(new String[0]));
             pluginApplicationContext.refresh();
 
+            //controller注入
+            List<Object> mvcControllers = Lists.newArrayList();
             Set<Class<?>> classes = ClassUtil.getClasses(pluginClassLoader, jarPath.toString());
             for (Class<?> aClass : classes) {
                 if (SpringUtils.isSpringController(aClass)) {
-                    SpringUtils.registerController(pluginApplicationContext.getBeanNamesForType(aClass)[0],requestMappingHandlerMapping);
+                    Object targetBean = pluginApplicationContext.getBean(aClass);
+                    mvcControllers.add(targetBean);
+                    SpringUtils.registerController(targetBean, requestMappingHandlerMapping);
                 }
             }
 
             log.info("Load plugin success: name={}, version={}, jarPath={}", pluginConfig.name(), pluginConfig.version(), jarPath);
-            return new Plugin(jarPath, pluginConfig, pluginApplicationContext);
+            return new Plugin(jarPath, pluginConfig,mvcControllers, pluginApplicationContext);
         } catch (Throwable e) {
             log.error(String.format("Load plugin exception, jarPath=%s", jarPath), e);
             CachedIntrospectionResults.clearClassLoader(pluginClassLoader);
@@ -87,7 +96,7 @@ public class PluginLoader {
         }
     }
 
-    public PluginConfigVO preLoad(Path jarPath){
+    public PluginConfigVO preLoad(Path jarPath) {
         if (log.isInfoEnabled()) {
             log.info("Start to load plugin: {}", jarPath);
         }

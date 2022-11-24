@@ -14,6 +14,7 @@ import java.beans.Introspector;
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -30,16 +31,18 @@ class Plugin {
     private PluginConfig pluginConfig;
     private PluginApplicationContext pluginApplicationContext;
 
-    public Plugin(Path jarPath, PluginConfig moduleConfig, PluginApplicationContext pluginApplicationContext) {
+    private List<Object> mvcController;
+    public Plugin(Path jarPath, PluginConfig pluginConfig,List<Object> mvcController, PluginApplicationContext pluginApplicationContext) {
         this.jarPath = jarPath;
-        this.pluginConfig = moduleConfig;
+        this.pluginConfig = pluginConfig;
         this.pluginApplicationContext = pluginApplicationContext;
         this.handlers = scanHandlers();
+        this.mvcController = mvcController;
     }
 
     private Map<String, PluginHandler> scanHandlers() {
         Map<String, PluginHandler> handlers = Maps.newHashMap();
-        // find Handler in module
+        // find Handler in plugin
         for (PluginHandler handler : pluginApplicationContext.getBeansOfType(PluginHandler.class).values()) {
             String handlerName = handler.name();
             if (!StringUtils.hasText(handlerName)) {
@@ -65,20 +68,20 @@ class Plugin {
     public Object doHandler(String handlerName, String handlerArgs) {
         checkNotNull(handlerName, "handlerName is null");
         checkNotNull(handlerArgs, "handlerArgs is null");
-        return doHandlerWithinModuleClassLoader(getHandler(handlerName), handlerArgs);
+        return doHandlerWithinPluginClassLoader(getHandler(handlerName), handlerArgs);
     }
 
-    private Object doHandlerWithinModuleClassLoader(PluginHandler handler, String handlerArgs) {
+    private Object doHandlerWithinPluginClassLoader(PluginHandler handler, String handlerArgs) {
         checkNotNull(handler, "handler is null");
         checkNotNull(handlerArgs, "handlerArgs is null");
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try {
-            ClassLoader moduleClassLoader = handler.getClass().getClassLoader();
-            Thread.currentThread().setContextClassLoader(moduleClassLoader);
+            ClassLoader pluginClassLoader = handler.getClass().getClassLoader();
+            Thread.currentThread().setContextClassLoader(pluginClassLoader);
             return handler.execute(handlerArgs);
         } catch (Exception e) {
-            log.error(String.format("Invoke module exception, handler=%s", handler.name()), e);
-            throw new PluginRuntimeException(String.format("doHandlerWithinModuleClassLoader has error, handler=%s", handler.getClass().getName()), e);
+            log.error(String.format("Invoke plugin exception, handler=%s", handler.name()), e);
+            throw new PluginRuntimeException(String.format("doHandlerWithinPluginClassLoader has error, handler=%s", handler.getClass().getName()), e);
         } finally {
             Thread.currentThread().setContextClassLoader(classLoader);
         }
@@ -86,7 +89,7 @@ class Plugin {
 
     public void destroy() throws Exception {
         if (log.isInfoEnabled()) {
-            log.info("Destroy module: name={}, version={}", pluginConfig.name(), pluginConfig.version());
+            log.info("Destroy plugin: name={}, version={}", pluginConfig.name(), pluginConfig.version());
         }
         // close spring context
         closeApplicationContext(pluginApplicationContext);

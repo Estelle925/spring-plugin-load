@@ -19,11 +19,9 @@ public class PluginManager implements DisposableBean {
     private final ConcurrentHashMap<String, Plugin> allPlugins = new ConcurrentHashMap<>();
 
     public Plugin register(Plugin plugin) {
-        checkNotNull(plugin, "module is null");
+        checkNotNull(plugin, "plugin is null");
         String key = toKey(plugin.getPluginConfig().name(), plugin.getPluginConfig().version());
-        if (log.isInfoEnabled()) {
-            log.info("Put module: {}", key);
-        }
+        log.info("Put plugin: {}", key);
         return allPlugins.put(key, plugin);
     }
 
@@ -31,18 +29,18 @@ public class PluginManager implements DisposableBean {
         return allPlugins.values();
     }
 
-    public Plugin find(String moduleName, String moduleVersion) {
-        checkNotNull(moduleName, "module name is null");
-        checkNotNull(moduleVersion, "module version is null");
-        return allPlugins.get(toKey(moduleName, moduleVersion));
+    public Plugin find(String pluginName, String pluginVersion) {
+        checkNotNull(pluginName, "plugin name is null");
+        checkNotNull(pluginVersion, "plugin version is null");
+        return allPlugins.get(toKey(pluginName, pluginVersion));
     }
 
-    public Plugin remove(String moduleName, String moduleVersion) {
-        checkNotNull(moduleName, "module name is null");
-        checkNotNull(moduleVersion, "module version is null");
-        String key = toKey(moduleName, moduleVersion);
+    public Plugin remove(String pluginName, String pluginVersion) {
+        checkNotNull(pluginName, "plugin name is null");
+        checkNotNull(pluginVersion, "plugin version is null");
+        String key = toKey(pluginName, pluginVersion);
         if (log.isInfoEnabled()) {
-            log.info("Remove module: {}", key);
+            log.info("Remove plugin: {}", key);
         }
         return allPlugins.remove(key);
     }
@@ -53,14 +51,14 @@ public class PluginManager implements DisposableBean {
             try {
                 each.destroy();
             } catch (Exception e) {
-                log.error(String.format("Failed to destroy module: %s", toKey(each.getPluginConfig().name(), each.getPluginConfig().version())), e);
+                log.error(String.format("Failed to destroy plugin: %s", toKey(each.getPluginConfig().name(), each.getPluginConfig().version())), e);
             }
         }
         allPlugins.clear();
     }
 
-    private String toKey(String moduleName, String moduleVersion) {
-        return moduleName + "#" + moduleVersion;
+    private String toKey(String pluginName, String pluginVersion) {
+        return pluginName + "#" + pluginVersion;
     }
 
 }

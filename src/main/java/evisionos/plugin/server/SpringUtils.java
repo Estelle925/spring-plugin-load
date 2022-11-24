@@ -5,6 +5,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
@@ -76,6 +79,17 @@ public class SpringUtils {
         BeanDefinition beanDefinition = builder.getBeanDefinition();
         beanDefinitionRegistry.registerBeanDefinition(aClass.getSimpleName(), new RootBeanDefinition(aClass));
 
+    }
+
+    public static void registerController(String controllerBeanName, ApplicationContext applicationContext) throws Exception {
+        final RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
+        Object controller = applicationContext.getBean(controllerBeanName);
+        //            unregisterController(controllerBeanName);
+        //注册Controller
+        Method method = requestMappingHandlerMapping.getClass().getSuperclass().getSuperclass().getDeclaredMethod("detectHandlerMethods", Object.class);
+        //将private改为可使用
+        method.setAccessible(true);
+        method.invoke(requestMappingHandlerMapping, controllerBeanName);
     }
 
 

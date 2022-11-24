@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.Set;
+
 @Slf4j
 @Component
 public class PluginLoader implements ApplicationContextAware {
@@ -59,6 +61,13 @@ public class PluginLoader implements ApplicationContextAware {
             pluginApplicationContext.setClassLoader(pluginClassLoader);
             pluginApplicationContext.scan(Sets.newHashSet(pluginConfig.getClass().getPackage().getName()).toArray(new String[0]));
             pluginApplicationContext.refresh();
+
+            Set<Class<?>> classes = ClassUtil.getClasses(pluginClassLoader, jarPath.toString());
+            for (Class<?> aClass : classes) {
+                if (SpringUtils.isSpringController(aClass)) {
+                    SpringUtils.registerController(aClass.getName(), applicationContext);
+                }
+            }
 
             log.info("Load plugin success: name={}, version={}, jarPath={}", pluginConfig.name(), pluginConfig.version(), jarPath);
             return new Plugin(jarPath, pluginConfig, pluginApplicationContext);

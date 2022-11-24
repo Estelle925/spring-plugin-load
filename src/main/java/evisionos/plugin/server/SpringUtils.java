@@ -81,10 +81,8 @@ public class SpringUtils {
 
     }
 
-    public static void registerController(String controllerBeanName, ApplicationContext applicationContext) throws Exception {
-        final RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
+    public static void registerController(String controllerBeanName, ApplicationContext applicationContext, RequestMappingHandlerMapping requestMappingHandlerMapping) throws Exception {
         Object controller = applicationContext.getBean(controllerBeanName);
-        //            unregisterController(controllerBeanName);
         //注册Controller
         Method method = requestMappingHandlerMapping.getClass().getSuperclass().getSuperclass().getDeclaredMethod("detectHandlerMethods", Object.class);
         //将private改为可使用

@@ -5,10 +5,13 @@ import evisionos.plugin.PluginConfig;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.CachedIntrospectionResults;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import javax.annotation.Resource;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -25,6 +28,9 @@ public class PluginLoader implements ApplicationContextAware {
      */
     @Setter
     private ApplicationContext applicationContext;
+
+    @Resource
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     private PluginConfig pluginConfig;
     /**
@@ -65,7 +71,7 @@ public class PluginLoader implements ApplicationContextAware {
             Set<Class<?>> classes = ClassUtil.getClasses(pluginClassLoader, jarPath.toString());
             for (Class<?> aClass : classes) {
                 if (SpringUtils.isSpringController(aClass)) {
-                    SpringUtils.registerController(aClass.getName(), applicationContext);
+                    SpringUtils.registerController(aClass.getName(),applicationContext,requestMappingHandlerMapping);
                 }
             }
 

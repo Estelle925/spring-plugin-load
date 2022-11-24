@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkState;
 @Data
 @Slf4j
 @AllArgsConstructor
-class Plugin {
+public class Plugin {
 
     private final Map<String, PluginHandler> handlers;
     private Path jarPath;

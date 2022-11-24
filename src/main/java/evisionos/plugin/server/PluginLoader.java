@@ -21,12 +21,12 @@ import java.util.Set;
 
 @Slf4j
 @Component
-public class PluginLoader implements ApplicationContextAware {
+public class PluginLoader {
 
     /**
      * 注入父applicationContext
      */
-    @Setter
+    @Resource
     private ApplicationContext applicationContext;
 
     @Resource

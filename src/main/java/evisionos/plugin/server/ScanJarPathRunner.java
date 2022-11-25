@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.nio.file.DirectoryStream;
@@ -46,6 +47,7 @@ public class ScanJarPathRunner implements CommandLineRunner, EnvironmentAware {
     @Override
     public void setEnvironment(Environment environment) {
         pluginJarAbsolutePath = environment.getProperty("evisionos.plugin.loadPath");
-        enableSystemScan = Boolean.valueOf(environment.getProperty("evisionos.plugin.enableSystemScan"));
+        String value = environment.getProperty("evisionos.plugin.enableSystemScan");
+        enableSystemScan = StrUtil.isNotBlank(value) ? Boolean.valueOf(value) : null;
     }
 }

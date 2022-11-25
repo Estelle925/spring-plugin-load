@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 @Slf4j
 @Component
 public class PluginLoader {
@@ -59,6 +61,9 @@ public class PluginLoader {
             throw new PluginRuntimeException("plugin config has and only has one");
         }
         pluginConfig = pluginConfigList.get(0);
+        checkNotNull(pluginConfig.name(), "pluginName is null");
+        checkNotNull(pluginConfig.version(), "pluginVersion is null");
+
         pluginClassLoader.addOverridePackages(Sets.newHashSet());
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         try {

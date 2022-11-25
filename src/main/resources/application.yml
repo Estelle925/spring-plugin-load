@@ -8,3 +8,4 @@ spring:
 evisionos:
     plugin:
         loadPath: /Users/chenhaiming/data/tb/driver/
+        enableSystemScan: true

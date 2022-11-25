@@ -44,9 +44,7 @@ public class PluginLoader {
      * @return plugin
      */
     public Plugin load(Path jarPath) {
-        if (log.isInfoEnabled()) {
-            log.info("Start to load plugin: {}", jarPath);
-        }
+        log.info("Start to load plugin: {}", jarPath);
         PluginClassLoader pluginClassLoader;
         try {
             pluginClassLoader = new PluginClassLoader(jarPath.toUri().toURL(), applicationContext.getClassLoader());
@@ -97,9 +95,7 @@ public class PluginLoader {
     }
 
     public PluginConfigVO preLoad(Path jarPath) {
-        if (log.isInfoEnabled()) {
-            log.info("Start to load plugin: {}", jarPath);
-        }
+        log.info("pre Start to load plugin: {}", jarPath);
         PluginClassLoader pluginClassLoader;
         try {
             pluginClassLoader = new PluginClassLoader(jarPath.toUri().toURL(), applicationContext.getClassLoader());

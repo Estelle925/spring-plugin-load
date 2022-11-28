@@ -19,11 +19,6 @@ public class PluginController {
     @Resource
     private PluginService pluginService;
 
-    @Resource
-    private ApplicationContext applicationContext;
-
-
-
     @GetMapping("/plugin/install")
     public void installPlugin(String path) {
         pluginService.loadAndRegister(Paths.get(path));
@@ -37,8 +32,7 @@ public class PluginController {
 
     @GetMapping("/plugin/getAllPlugins")
     public String getAllPlugins(){
-       return Arrays.toString(applicationContext.getBeanDefinitionNames());
-//        return pluginService.queryAllPlugin();
+        return pluginService.queryAllPlugin();
     }
 
 }

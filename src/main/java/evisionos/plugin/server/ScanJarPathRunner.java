@@ -1,7 +1,7 @@
 package evisionos.plugin.server;
 
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -30,7 +30,7 @@ public class ScanJarPathRunner implements CommandLineRunner, EnvironmentAware {
 
     @Override
     public void run(String... args) {
-        if (StrUtil.isNotBlank(pluginJarAbsolutePath) && enableSystemScan != null && enableSystemScan) {
+        if (StringUtils.isNotBlank(pluginJarAbsolutePath) && enableSystemScan != null && enableSystemScan) {
             log.info("Start to run scan jar path: {}", pluginJarAbsolutePath);
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(pluginJarAbsolutePath), "*.jar")) {
                 stream.forEach(pluginService::loadAndRegister);
@@ -46,6 +46,6 @@ public class ScanJarPathRunner implements CommandLineRunner, EnvironmentAware {
     public void setEnvironment(Environment environment) {
         pluginJarAbsolutePath = environment.getProperty("evisionos.plugin.loadPath");
         String value = environment.getProperty("evisionos.plugin.enableSystemScan");
-        enableSystemScan = StrUtil.isNotBlank(value) ? Boolean.valueOf(value) : null;
+        enableSystemScan = StringUtils.isNotBlank(value) ? Boolean.valueOf(value) : null;
     }
 }

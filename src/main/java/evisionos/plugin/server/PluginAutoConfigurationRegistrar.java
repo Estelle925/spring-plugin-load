@@ -1,6 +1,5 @@
 package evisionos.plugin.server;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.google.common.collect.Lists;
 import evisionos.plugin.PluginConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +9,7 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -46,7 +46,7 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
             }
 
             //加载jar包
-            if (CollectionUtil.isNotEmpty(jarPaths)) {
+            if (!CollectionUtils.isEmpty(jarPaths)) {
                 for (String path : jarPaths) {
                     Path jarPath = Paths.get(path);
                     try {

@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import javax.annotation.Resource;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,10 @@ public class PluginLoader {
      * @return plugin
      */
     public Plugin load(Path jarPath) {
+        //判断jar是否存在
+        if (!Files.exists(jarPath)) {
+            throw new PluginRuntimeException("jar file is noe exist");
+        }
         log.info("Start to load plugin: {}", jarPath);
         PluginClassLoader pluginClassLoader;
         try {

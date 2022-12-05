@@ -29,6 +29,7 @@ public class PluginService {
             Plugin plugin = pluginLoader.load(jarPath);
             Plugin successPlugin = pluginManager.register(plugin);
         } catch (Exception e) {
+            log.error("plugin load and register fail", e);
             return false;
         }
         return true;
@@ -39,6 +40,7 @@ public class PluginService {
             Plugin plugin = pluginManager.remove(pluginName, pluginVersion);
             destroyPlugin(plugin);
         } catch (Exception e) {
+            log.error("plugin remove and destroy fail", e);
             return false;
         }
         return true;

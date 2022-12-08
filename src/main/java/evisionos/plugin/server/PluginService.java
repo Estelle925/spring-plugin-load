@@ -22,10 +22,22 @@ public class PluginService {
     @Resource
     private PluginManager pluginManager;
 
+    /**
+     * 预加载插件信息
+     * @param jarPath jar包路径
+     * @return PluginConfigVO
+     */
     public PluginConfigVO preLoad(Path jarPath) {
         return pluginLoader.preLoad(jarPath);
     }
 
+    /**
+     * 加载注册插件
+     * @param jarPath jar包路径
+     * @param pluginName 插件名
+     * @param pluginVersion 插件版本
+     * @return 插件加载注册成功
+     */
     public boolean loadAndRegister(Path jarPath, String pluginName, String pluginVersion) {
         try {
             if (!Files.exists(jarPath)) {
@@ -51,31 +63,33 @@ public class PluginService {
         return true;
     }
 
+    /**
+     * 卸载删除插件
+     * @param pluginName 插件名
+     * @param pluginVersion 插件版本
+     * @return 卸载删除成功
+     */
     public boolean removeAndDestroy(String pluginName, String pluginVersion) {
         try {
             if (pluginManager.find(pluginName, pluginVersion) == null) {
                 throw new PluginRuntimeException("plugin load and register fail plugin is not exist");
             }
             Plugin plugin = pluginManager.remove(pluginName, pluginVersion);
-            destroyPlugin(plugin);
+            if (Objects.nonNull(plugin)) {
+                try {
+                    for (Object targetBean : plugin.getMvcController()) {
+                        SpringUtils.unRegisterController(plugin.getPluginApplicationContext(), targetBean.getClass());
+                    }
+                    plugin.destroy();
+                } catch (Throwable e) {
+                    log.error(String.format("Failed to destroy plugin: name=%s, version=%s", plugin.getPluginConfig().name(), plugin.getPluginConfig().version()), e);
+                    throw new PluginRuntimeException("Failed to destroy plugin", e);
+                }
+            }
         } catch (Exception e) {
             throw new PluginRuntimeException("plugin remove and destroy fail", e);
         }
         return true;
-    }
-
-    private void destroyPlugin(Plugin plugin) {
-        if (Objects.nonNull(plugin)) {
-            try {
-                for (Object targetBean : plugin.getMvcController()) {
-                    SpringUtils.unRegisterController(plugin.getPluginApplicationContext(), targetBean.getClass());
-                }
-                plugin.destroy();
-            } catch (Throwable e) {
-                log.error(String.format("Failed to destroy plugin: name=%s, version=%s", plugin.getPluginConfig().name(), plugin.getPluginConfig().version()), e);
-                throw new PluginRuntimeException("Failed to destroy plugin", e);
-            }
-        }
     }
 
     public Object handle(String pluginName, String pluginVersion, String handlerName, Map<String, Object> handlerArgs) {
@@ -86,12 +100,15 @@ public class PluginService {
         return plugin.doHandler(handlerName, GsonUtils.toJson(handlerArgs));
     }
 
-    public String queryAllPlugin() {
-        List<PluginConfigVO> result = pluginManager.allPlugins().stream().map(plugin -> {
+    /**
+     * 获取所有插件
+     * @return 所有插件信息
+     */
+    public List<PluginConfigVO> queryAllPlugin() {
+        return pluginManager.allPlugins().stream().map(plugin -> {
             PluginConfig pluginConfig = plugin.getPluginConfig();
             return PluginConfigVO.configToConfigVo(pluginConfig);
         }).collect(Collectors.toList());
-        return GsonUtils.toJson(result);
     }
 
 }

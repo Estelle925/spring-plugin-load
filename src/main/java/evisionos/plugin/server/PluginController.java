@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * @author chenhaiming
@@ -18,8 +19,8 @@ public class PluginController {
     private PluginService pluginService;
 
     @GetMapping("/plugin/install")
-    public void installPlugin(String path) {
-        pluginService.loadAndRegister(Paths.get(path));
+    public void installPlugin(String path,String name,String version) {
+        pluginService.loadAndRegister(Paths.get(path),name,version);
     }
 
 
@@ -29,7 +30,7 @@ public class PluginController {
     }
 
     @GetMapping("/plugin/getAllPlugins")
-    public String getAllPlugins(){
+    public List<PluginConfigVO> getAllPlugins(){
         return pluginService.queryAllPlugin();
     }
 

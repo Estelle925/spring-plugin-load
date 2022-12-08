@@ -126,7 +126,7 @@ public class PluginService {
 
     /**
      * 获取所有插件
-     * @return 所有插件信息
+     * @return List<PluginConfigVO>
      */
     public List<PluginConfigVO> queryAllPlugin() {
         return pluginManager.allPlugins().stream().map(plugin -> {

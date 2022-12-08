@@ -41,10 +41,16 @@
 
     1.  预加入插件，返回插件相关信息如插件版本、插件参数等
 
-
-     public PluginConfigVO preLoad(Path jarPath) {
-            
-      }
+```java
+    /**
+     * 预加载插件信息
+     * @param jarPath jar包路径
+     * @return PluginConfigVO
+     */
+    public PluginConfigVO preLoad(Path jarPath) {
+        return pluginLoader.preLoad(jarPath);
+    }
+ ```   
 
 2.  加载注册插件
 

@@ -2,6 +2,7 @@ package evisionos.plugin.server;
 
 import evisionos.plugin.PluginConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,14 +26,16 @@ public class PluginService {
         return pluginLoader.preLoad(jarPath);
     }
 
-    public boolean loadAndRegister(Path jarPath, String name, String version) {
+    public boolean loadAndRegister(Path jarPath, String pluginName, String pluginVersion) {
         try {
             if (!Files.exists(jarPath)) {
                 throw new PluginRuntimeException("jar file is noe exist");
             }
-            Plugin existPlugin = pluginManager.find(name, version);
-            if (existPlugin != null) {
-                throw new PluginRuntimeException("plugin load and register fail plugin is exist");
+            if (StringUtils.isNotBlank(pluginName) && StringUtils.isNotBlank(pluginVersion)) {
+                Plugin existPlugin = pluginManager.find(pluginName, pluginVersion);
+                if (existPlugin != null) {
+                    throw new PluginRuntimeException("plugin load and register fail plugin is exist");
+                }
             }
             List<Plugin> allPlugin = (List<Plugin>) pluginManager.allPlugins();
             for (Plugin plugin : allPlugin) {
@@ -41,7 +44,7 @@ public class PluginService {
                 }
             }
             Plugin plugin = pluginLoader.load(jarPath);
-            Plugin successPlugin = pluginManager.register(plugin, name, version);
+            Plugin successPlugin = pluginManager.register(plugin, pluginName, pluginVersion);
         } catch (Exception e) {
             throw new PluginRuntimeException("plugin load and register fail", e);
         }

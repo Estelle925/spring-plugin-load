@@ -32,21 +32,18 @@ public class PluginService {
             }
             Plugin existPlugin = pluginManager.find(name, version);
             if (existPlugin != null) {
-                log.error("plugin load and register fail plugin is exist");
-                return false;
+                throw new PluginRuntimeException("plugin load and register fail plugin is exist");
             }
             List<Plugin> allPlugin = (List<Plugin>) pluginManager.allPlugins();
             for (Plugin plugin : allPlugin) {
                 if (plugin.getJarPath().toString().equals(jarPath.toString())) {
-                    log.error("plugin load and register fail plugin is exist");
-                    return false;
+                    throw new PluginRuntimeException("plugin load and register fail plugin jar file is loaded");
                 }
             }
             Plugin plugin = pluginLoader.load(jarPath);
             Plugin successPlugin = pluginManager.register(plugin, name, version);
         } catch (Exception e) {
-            log.error("plugin load and register fail", e);
-            return false;
+            throw new PluginRuntimeException("plugin load and register fail", e);
         }
         return true;
     }
@@ -54,14 +51,12 @@ public class PluginService {
     public boolean removeAndDestroy(String pluginName, String pluginVersion) {
         try {
             if (pluginManager.find(pluginName, pluginVersion) == null) {
-                log.error("plugin load and register fail plugin is not exist");
-                return false;
+                throw new PluginRuntimeException("plugin load and register fail plugin is not exist");
             }
             Plugin plugin = pluginManager.remove(pluginName, pluginVersion);
             destroyPlugin(plugin);
         } catch (Exception e) {
-            log.error("plugin remove and destroy fail", e);
-            return false;
+            throw new PluginRuntimeException("plugin remove and destroy fail", e);
         }
         return true;
     }

@@ -48,22 +48,51 @@
 
 2.  加载注册插件
 
+```java
+/**
+ * 指定插件名和版本加载注册插件
+ * @param jarPath jar包路径
+ * @param pluginName 插件名
+ * @param pluginVersion 插件版本
+ * @return 插件加载注册成功
+ */
+public boolean loadAndRegister(Path jarPath, String pluginName, String pluginVersion) {
+    
+}
+```
 
-       public boolean loadAndRegister(Path jarPath, String pluginName, String pluginVersion) {
-
-
-3.  删除卸载插件
-
-
-       public boolean removeAndDestroy(String pluginName, String pluginVersion) {
-           
-        }
-
+```java
+       
+    /**
+     * 不指定插件名字和版本，加载注册插件
+     * @param jarPath jar包路径
+     * @return 插件加载注册成功
+     */
+    public boolean loadAndRegister(Path jarPath) {
+    
+    }
+ ```   
+3. 删除卸载插件
+```java
+   /**
+    * 卸载删除插件
+    * @param pluginName 插件名
+    * @param pluginVersion 插件版本
+    * @return 卸载删除成功
+    */
+   public boolean removeAndDestroy(String pluginName, String pluginVersion) {
+   
+   }
+```
 4.  查询所有已装配上的插件
 
-
-     public String queryAllPlugin() {
-            
-      }
-
+```java
+    /**
+     * 获取所有插件
+     * @return List<PluginConfigVO>
+     */
+    public List<PluginConfigVO> queryAllPlugin() {
+        
+    }
+```
 #### 5. 测试插件jar包

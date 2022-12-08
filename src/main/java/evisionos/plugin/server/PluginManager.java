@@ -1,6 +1,7 @@
 package evisionos.plugin.server;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +19,14 @@ public class PluginManager implements DisposableBean {
      */
     private final ConcurrentHashMap<String, Plugin> allPlugins = new ConcurrentHashMap<>();
 
-    public Plugin register(Plugin plugin) {
+    public Plugin register(Plugin plugin,String name,String version) {
         checkNotNull(plugin, "plugin is null");
-        String key = toKey(plugin.getPluginConfig().name(), plugin.getPluginConfig().version());
+        String key;
+        if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(version)) {
+            key = toKey(name, version);
+        } else {
+            key = toKey(plugin.getPluginConfig().name(), plugin.getPluginConfig().version());
+        }
         log.info("Put plugin: {}", key);
         return allPlugins.put(key, plugin);
     }

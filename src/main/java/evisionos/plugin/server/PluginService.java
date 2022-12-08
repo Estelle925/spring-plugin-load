@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +25,25 @@ public class PluginService {
         return pluginLoader.preLoad(jarPath);
     }
 
-    public boolean loadAndRegister(Path jarPath) {
+    public boolean loadAndRegister(Path jarPath, String name, String version) {
         try {
+            if (!Files.exists(jarPath)) {
+                throw new PluginRuntimeException("jar file is noe exist");
+            }
+            Plugin existPlugin = pluginManager.find(name, version);
+            if (existPlugin != null) {
+                log.error("plugin load and register fail plugin is exist");
+                return false;
+            }
+            List<Plugin> allPlugin = (List<Plugin>) pluginManager.allPlugins();
+            for (Plugin plugin : allPlugin) {
+                if (plugin.getJarPath().toString().equals(jarPath.toString())) {
+                    log.error("plugin load and register fail plugin is exist");
+                    return false;
+                }
+            }
             Plugin plugin = pluginLoader.load(jarPath);
-            Plugin successPlugin = pluginManager.register(plugin);
+            Plugin successPlugin = pluginManager.register(plugin, name, version);
         } catch (Exception e) {
             log.error("plugin load and register fail", e);
             return false;
@@ -37,6 +53,10 @@ public class PluginService {
 
     public boolean removeAndDestroy(String pluginName, String pluginVersion) {
         try {
+            if (pluginManager.find(pluginName, pluginVersion) == null) {
+                log.error("plugin load and register fail plugin is not exist");
+                return false;
+            }
             Plugin plugin = pluginManager.remove(pluginName, pluginVersion);
             destroyPlugin(plugin);
         } catch (Exception e) {
@@ -50,7 +70,7 @@ public class PluginService {
         if (Objects.nonNull(plugin)) {
             try {
                 for (Object targetBean : plugin.getMvcController()) {
-                    SpringUtils.unRegisterController(plugin.getPluginApplicationContext(),targetBean.getClass());
+                    SpringUtils.unRegisterController(plugin.getPluginApplicationContext(), targetBean.getClass());
                 }
                 plugin.destroy();
             } catch (Throwable e) {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -49,9 +50,9 @@ public class PluginService {
                     throw new PluginRuntimeException("plugin load and register fail plugin is exist");
                 }
             }
-            ConcurrentHashMap<String, Plugin> allPlugin = (ConcurrentHashMap<String, Plugin>) pluginManager.allPlugins();
-            for (Map.Entry<String, Plugin> entry : allPlugin.entrySet()) {
-                if (entry.getValue().getJarPath().toString().equals(jarPath.toString())) {
+            Collection<Plugin> allPlugin =  pluginManager.allPlugins();
+            for (Plugin plugin : allPlugin) {
+                if (plugin.getJarPath().toString().equals(jarPath.toString())) {
                     throw new PluginRuntimeException("plugin load and register fail plugin jar file is loaded");
                 }
             }
@@ -73,9 +74,9 @@ public class PluginService {
             if (!Files.exists(jarPath)) {
                 throw new PluginRuntimeException("jar file is noe exist");
             }
-            ConcurrentHashMap<String, Plugin> allPlugin = (ConcurrentHashMap<String, Plugin>) pluginManager.allPlugins();
-            for (Map.Entry<String, Plugin> entry : allPlugin.entrySet()) {
-                if (entry.getValue().getJarPath().toString().equals(jarPath.toString())) {
+            Collection<Plugin> allPlugin =  pluginManager.allPlugins();
+            for (Plugin plugin : allPlugin) {
+                if (plugin.getJarPath().toString().equals(jarPath.toString())) {
                     throw new PluginRuntimeException("plugin load and register fail plugin jar file is loaded");
                 }
             }

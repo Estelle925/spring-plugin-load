@@ -32,7 +32,7 @@ public class PluginService {
     }
 
     /**
-     * 加载注册插件
+     * 指定插件名和版本加载注册插件
      * @param jarPath jar包路径
      * @param pluginName 插件名
      * @param pluginVersion 插件版本
@@ -57,6 +57,30 @@ public class PluginService {
             }
             Plugin plugin = pluginLoader.load(jarPath);
             Plugin successPlugin = pluginManager.register(plugin, pluginName, pluginVersion);
+        } catch (Exception e) {
+            throw new PluginRuntimeException("plugin load and register fail", e);
+        }
+        return true;
+    }
+
+    /**
+     * 不指定插件名字和版本，加载注册插件
+     * @param jarPath jar包路径
+     * @return 插件加载注册成功
+     */
+    public boolean loadAndRegister(Path jarPath) {
+        try {
+            if (!Files.exists(jarPath)) {
+                throw new PluginRuntimeException("jar file is noe exist");
+            }
+            List<Plugin> allPlugin = (List<Plugin>) pluginManager.allPlugins();
+            for (Plugin plugin : allPlugin) {
+                if (plugin.getJarPath().toString().equals(jarPath.toString())) {
+                    throw new PluginRuntimeException("plugin load and register fail plugin jar file is loaded");
+                }
+            }
+            Plugin plugin = pluginLoader.load(jarPath);
+            Plugin successPlugin = pluginManager.register(plugin, null, null);
         } catch (Exception e) {
             throw new PluginRuntimeException("plugin load and register fail", e);
         }

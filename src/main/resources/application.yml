@@ -6,5 +6,5 @@ spring:
 
 ## 插件加载地址
 plugin:
-    loadPath: /Users/chenhaiming/data/tb/driver/
+    loadPath: /home/plugins
     enableSystemScan: true

@@ -1,4 +1,4 @@
-package evisionos.plugin.server;
+package com.plugin.server;
 
 class PluginRuntimeException extends RuntimeException {
 

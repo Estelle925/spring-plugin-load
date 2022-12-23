@@ -1,4 +1,4 @@
-package evisionos.plugin.server;
+package com.plugin.server;
 
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;

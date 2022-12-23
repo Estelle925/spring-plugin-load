@@ -12,7 +12,6 @@
 
 #### 3. yml 配置文件上添加插件加载配置
 
-    evisionos:
       plugin:
         loadPath: /Users/chenhaiming/data/tb/driver/  
         enableSystemScan: true

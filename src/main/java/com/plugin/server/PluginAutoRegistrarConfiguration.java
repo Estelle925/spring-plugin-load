@@ -1,4 +1,4 @@
-package evisionos.plugin.server;
+package com.plugin.server;
 
 //@Configuration
 //@Import(PluginAutoConfigurationRegistrar.class)

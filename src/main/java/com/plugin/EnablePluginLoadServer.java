@@ -1,4 +1,4 @@
-package evisionos.plugin;
+package com.plugin;
 
 import org.springframework.context.annotation.Import;
 

@@ -1,7 +1,7 @@
-package evisionos.plugin.server;
+package com.plugin.server;
 
 import com.google.common.collect.Lists;
-import evisionos.plugin.PluginConfig;
+import com.plugin.PluginConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.EnvironmentAware;
@@ -81,6 +81,6 @@ public class PluginAutoConfigurationRegistrar implements ImportBeanDefinitionReg
 
     @Override
     public void setEnvironment(Environment environment) {
-        pluginJarAbsolutePath = environment.getProperty("evisionos.plugin.loadPath");
+        pluginJarAbsolutePath = environment.getProperty("plugin.loadPath");
     }
 }

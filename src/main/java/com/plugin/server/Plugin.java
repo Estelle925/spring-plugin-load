@@ -1,8 +1,8 @@
-package evisionos.plugin.server;
+package com.plugin.server;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import evisionos.plugin.PluginConfig;
+import com.plugin.PluginConfig;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

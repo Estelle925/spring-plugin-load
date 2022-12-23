@@ -1,4 +1,4 @@
-package evisionos.plugin.server;
+package com.plugin.server;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -44,8 +44,8 @@ public class ScanJarPathRunner implements CommandLineRunner, EnvironmentAware {
 
     @Override
     public void setEnvironment(Environment environment) {
-        pluginJarAbsolutePath = environment.getProperty("evisionos.plugin.loadPath");
-        String value = environment.getProperty("evisionos.plugin.enableSystemScan");
+        pluginJarAbsolutePath = environment.getProperty("plugin.loadPath");
+        String value = environment.getProperty("plugin.enableSystemScan");
         enableSystemScan = StringUtils.isNotBlank(value) ? Boolean.valueOf(value) : null;
     }
 }

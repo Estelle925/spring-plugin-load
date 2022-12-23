@@ -1,7 +1,7 @@
-package evisionos.plugin;
+package com.plugin;
 
 import com.google.common.collect.Lists;
-import evisionos.plugin.server.*;
+import com.plugin.server.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;

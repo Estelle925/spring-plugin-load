@@ -1,4 +1,4 @@
-# 动态Jar包插件加载工程
+# 热插拔思想实现 动态Jar包插件加载工程
 
 ## 原理：
 #### 1. 自定义 PluginClassLoader 开辟出自己的classloader类，父类无法管理子类的类加载

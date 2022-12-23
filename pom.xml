@@ -170,10 +170,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-            </plugins>
-        </pluginManagement>
     </build>
 
 </project>

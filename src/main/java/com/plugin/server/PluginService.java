@@ -117,14 +117,6 @@ public class PluginService {
         return true;
     }
 
-    public Object handle(String pluginName, String pluginVersion, String handlerName, Map<String, Object> handlerArgs) {
-        Plugin plugin = pluginManager.find(pluginName, pluginVersion);
-        if (Objects.isNull(plugin)) {
-            throw new PluginRuntimeException("plugin not exist");
-        }
-        return plugin.doHandler(handlerName, GsonUtils.toJson(handlerArgs));
-    }
-
     /**
      * 获取所有插件
      * @return List<PluginConfigVO>

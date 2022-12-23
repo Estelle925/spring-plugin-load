@@ -14,7 +14,7 @@
 #### 3. yml 配置文件上添加插件加载配置
 
       plugin:
-        loadPath: /Users/chenhaiming/data/tb/driver/  
+        loadPath: /home/plugins
         enableSystemScan: true
 
 *   loadPath：插件jar包保存地址，工程启动扫描地址，jar包保存地址

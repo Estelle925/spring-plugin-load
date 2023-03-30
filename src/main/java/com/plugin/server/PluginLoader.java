@@ -1,9 +1,11 @@
 package com.plugin.server;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.plugin.PluginConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.common.utils.CollectionUtils;
 import org.springframework.beans.CachedIntrospectionResults;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -13,10 +15,7 @@ import javax.annotation.Resource;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -78,14 +77,25 @@ public class PluginLoader {
 
             //controller注入
             List<Object> mvcControllers = Lists.newArrayList();
-            Set<Class<?>> classes = ClassUtil.getClasses(pluginClassLoader, jarPath.toString());
+            Map<Class<?>, List<Class<?>>> proxyClassMap = Maps.newHashMap();
+
+            Set<Class<?>> classes = CommonUtils.getClasses(pluginClassLoader, jarPath.toString());
             for (Class<?> aClass : classes) {
                 if (SpringUtils.isSpringController(aClass)) {
                     Object targetBean = pluginApplicationContext.getBean(aClass);
                     mvcControllers.add(targetBean);
                     SpringUtils.registerController(targetBean, requestMappingHandlerMapping);
                 }
+                //注册dubbo consumer
+                if (SpringUtils.isRefDubboClass(aClass)) {
+                    //获取引用dubbo的类
+                    List<Class<?>> consumerClass = SpringUtils.getDubboConsumer(aClass, classes);
+                    if (CollectionUtils.isNotEmpty(consumerClass)) {
+                        proxyClassMap.put(aClass, consumerClass);
+                    }
+                }
             }
+            SpringUtils.registerDubboConsumer(proxyClassMap, pluginApplicationContext);
 
             log.info("Load plugin success: name={}, version={}, jarPath={}", pluginConfig.name(), pluginConfig.version(), jarPath);
             return new Plugin(jarPath, pluginConfig,mvcControllers, pluginApplicationContext);

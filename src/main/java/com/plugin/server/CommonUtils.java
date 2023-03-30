@@ -16,8 +16,18 @@ import java.util.jar.JarFile;
  *
  */
 @Slf4j
-public class ClassUtil {
-
+public class CommonUtils {
+    public static String firstCharToLowercase(String str) {
+        if (str == null || str.length() == 0) {
+            return str;
+        }
+        char[] chars = str.toCharArray();
+        if (Character.isUpperCase(chars[0])) {
+            chars[0] = Character.toLowerCase(chars[0]);
+            return new String(chars);
+        }
+        return str;
+    }
     /**
      * 以文件的形式来获取包下的所有Class
      */

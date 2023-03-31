@@ -27,6 +27,9 @@
 #### 4. 接口相关
 
 插件加载管理入口类：PluginService
+
+引入插件与加载平台交互api包依赖 https://github.com/Estelle925/spring-plugin-load-api
+![img.png](img.png)
 1. 预加入插件，返回插件相关信息如插件版本、插件参数等
 
 ```java
@@ -89,4 +92,12 @@ public boolean loadAndRegister(Path jarPath, String pluginName, String pluginVer
         
     }
 ```
-#### 5. 测试插件jar包
+#### 5. 测试插件jar包开发，可以参考插件demo  https://github.com/Estelle925/spring-plugin-demo
+##### 引入插件api依赖
+![img.png](img.png)
+
+##### 创建插件定义config类，标识插件信息
+![img_1.png](img_1.png)
+
+##### 定义demo插件controller测试
+![img_2.png](img_2.png)

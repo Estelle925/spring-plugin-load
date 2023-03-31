@@ -111,56 +111,6 @@ public class SpringUtils {
         method.invoke(requestMappingHandlerMapping, controller);
     }
 
-    public static boolean isRefDubboClass(Class<?> clazz) {
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            DubboReference dubboReference = field.getAnnotation(DubboReference.class);
-            if (dubboReference != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static List<Class<?>> getDubboConsumer(Class<?> clazz, Set<Class<?>> classes) {
-        List<Class<?>> list = Lists.newArrayList();
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            //取类中引用的 provider类
-            if (field.isAnnotationPresent(DubboReference.class)) {
-                for (Class<?> aClass : classes) {
-                    //provider类 创建 consumer
-                    if (field.getName().equalsIgnoreCase(aClass.getSimpleName())) {
-                        list.add(aClass);
-                    }
-                }
-            }
-        }
-        return list;
-    }
-
-    public static void registerDubboConsumer(Map<Class<?>, List<Class<?>>> proxyClassMap, PluginApplicationContext applicationContext) throws IllegalAccessException, InstantiationException {
-        for (Map.Entry<Class<?>, List<Class<?>>> entry : proxyClassMap.entrySet()) {
-            List<Class<?>> proxyClass = entry.getValue();
-            Class<?> mainClass = entry.getKey();
-            String beanName = getBeanName(mainClass);
-            Object bean = applicationContext.getBean(beanName);
-            Class<?> beanClass = bean.getClass();
-            for (Class<?> consumerClass : proxyClass) {
-                Object proxyBean = DubboDynamicLoadUtil.createDubboBean(consumerClass);
-                Field[] fields = beanClass.getDeclaredFields();
-                for (Field field : fields) {
-                    if (field.getName().equalsIgnoreCase(consumerClass.getSimpleName())) {
-                        field.setAccessible(true);
-                        field.set(bean, proxyBean);
-                        log.info("给bean注入dubbo 依赖接口服务成功 bean = {},proxyBean={}", bean, proxyBean);
-                    }
-                }
-                applicationContext.getBean(beanName);
-            }
-        }
-    }
-
     public static String getBeanName(Class<?> aClass) {
         String beanName = null;
         if (aClass.getAnnotation(RestController.class) != null) {

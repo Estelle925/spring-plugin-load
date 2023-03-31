@@ -86,17 +86,7 @@ public class PluginLoader {
                     mvcControllers.add(targetBean);
                     SpringUtils.registerController(targetBean, requestMappingHandlerMapping);
                 }
-                //注册dubbo consumer
-                if (SpringUtils.isRefDubboClass(aClass)) {
-                    //获取引用dubbo的类
-                    List<Class<?>> consumerClass = SpringUtils.getDubboConsumer(aClass, classes);
-                    if (CollectionUtils.isNotEmpty(consumerClass)) {
-                        proxyClassMap.put(aClass, consumerClass);
-                    }
-                }
             }
-            SpringUtils.registerDubboConsumer(proxyClassMap, pluginApplicationContext);
-
             log.info("Load plugin success: name={}, version={}, jarPath={}", pluginConfig.name(), pluginConfig.version(), jarPath);
             return new Plugin(jarPath, pluginConfig,mvcControllers, pluginApplicationContext);
         } catch (Throwable e) {

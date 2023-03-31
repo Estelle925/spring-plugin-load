@@ -1,5 +1,10 @@
 #   基于热插拔和SPI编程思想实现动态Jar包插件加载工程，可以动态加载spring bean，注册mvc servlet路径，支持nacos-dubbo动态消费服务注册，将其打成二方包依赖到主工程，实现系统功能增强，使用场景如多通信协议驱动扩展动态加载，动态数据加工等。
 ### 切面类无法动态加载 !!!!!
+
+## 分支说明：
+    master分支： 支持bean、mvc动态注册管理
+    base-nacos分支： 支持bean、mvc、nacos动态注册管理
+
 ## 原理：
 #### 1. 自定义 PluginClassLoader 开辟出自己的classloader类，父类无法管理子类的类加载
 #### 2. 自定义 PluginApplicationContext 从spring 容器中开辟出自定义管理容器空间，基于继承原理 父Application Context 无法管理子类容器空间，但是生命周期互不影响，内存互不占用。

@@ -1,25 +1,20 @@
 package com.plugin.server;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.plugin.PluginConfig;
+import com.plugin.api.PluginConfig;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.CachedIntrospectionResults;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.util.StringUtils;
 
 import java.beans.Introspector;
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 @Data
 @Slf4j

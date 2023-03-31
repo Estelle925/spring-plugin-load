@@ -1,6 +1,6 @@
 package com.plugin.server;
 
-import com.plugin.PluginConfig;
+import com.plugin.api.PluginConfig;
 import lombok.Data;
 
 /**

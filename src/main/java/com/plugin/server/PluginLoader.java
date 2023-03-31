@@ -3,7 +3,7 @@ package com.plugin.server;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.plugin.PluginConfig;
+import com.plugin.api.PluginConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.common.utils.CollectionUtils;
 import org.springframework.beans.CachedIntrospectionResults;

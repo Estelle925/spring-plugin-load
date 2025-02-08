@@ -1,108 +1,104 @@
-#   基于热插拔和SPI编程思想实现动态Jar包插件加载工程，可以动态加载spring bean，注册mvc servlet路径，支持nacos-dubbo动态消费服务注册，将其打成二方包依赖到主工程，实现系统功能增强，使用场景如多通信协议驱动扩展动态加载，动态数据加工等。
-### 切面类无法动态加载 !!!!!
+# 🚀 Spring Plugin Load - 强大的动态插件加载框架
 
-## 分支说明：
-    master分支： 支持bean、mvc动态注册管理
-    base-nacos分支： 支持bean、mvc、nacos动态注册管理
+> 一个基于Spring生态的动态插件加载框架，让你的应用拥有无限扩展可能！
 
-## 原理：
-#### 1. 自定义 PluginClassLoader 开辟出自己的classloader类，父类无法管理子类的类加载
-#### 2. 自定义 PluginApplicationContext 从spring 容器中开辟出自定义管理容器空间，基于继承原理 父Application Context 无法管理子类容器空间，但是生命周期互不影响，内存互不占用。
+## ✨ 特性
 
+- 🔌 **热插拔**: 运行时动态加载/卸载插件，无需重启应用
+- 🎯 **Spring集成**: 完美支持Spring Bean动态注册
+- 🌐 **MVC支持**: 动态注册Servlet路径
+- ☁️ **微服务友好**: 支持Nacos-Dubbo服务动态注册
+- 🔒 **安全隔离**: 自定义ClassLoader确保插件间隔离
+- 🎨 **轻量灵活**: 作为二方包集成，即插即用
 
-## 使用示例
+## 🎯 应用场景
 
-#### 1. springboot application类上添加注解
+- 多通信协议驱动的动态扩展
+- 实时数据处理插件
+- 业务功能动态扩展
+- 第三方集成模块
+- 定制化功能按需加载
 
-    @EnablePluginLoadServer()
+## 🛠️ 核心原理
 
-#### 3. yml 配置文件上添加插件加载配置
+### ClassLoader隔离
+自定义`PluginClassLoader`创建独立的类加载空间，确保插件间的完全隔离。
 
-      plugin:
-        loadPath: /home/plugins
-        enableSystemScan: true
+### Spring容器管理
+定制`PluginApplicationContext`实现插件容器的自主管理，做到:
+- 生命周期独立管理
+- 内存空间互不影响
+- 上下文完全隔离
 
-*   loadPath：插件jar包保存地址，工程启动扫描地址，jar包保存地址
+## 📦 快速开始
 
-*   enableSystemScan：是否启用 
-    
+### 1. 启用插件加载
 
-注意：插件加载配置必填，如不填工程无法启动扫描。
-
-#### 4. 接口相关
-
-插件加载管理入口类：PluginService
-
-引入插件与加载平台交互api包依赖 https://github.com/Estelle925/spring-plugin-load-api
-![img.png](img.png)
-1. 预加入插件，返回插件相关信息如插件版本、插件参数等
-
+在主应用类上添加注解：
 ```java
-    /**
-     * 预加载插件信息
-     * @param jarPath jar包路径
-     * @return PluginConfigVO
-     */
-    public PluginConfigVO preLoad(Path jarPath) {
-        return pluginLoader.preLoad(jarPath);
-    }
- ```   
-
-2.  加载注册插件
-
-```java
-/**
- * 指定插件名和版本加载注册插件
- * @param jarPath jar包路径
- * @param pluginName 插件名
- * @param pluginVersion 插件版本
- * @return 插件加载注册成功
- */
-public boolean loadAndRegister(Path jarPath, String pluginName, String pluginVersion) {
-    
-}
+@EnablePluginLoadServer
 ```
 
-```java
-       
-    /**
-     * 不指定插件名字和版本，加载注册插件
-     * @param jarPath jar包路径
-     * @return 插件加载注册成功
-     */
-    public boolean loadAndRegister(Path jarPath) {
-    
-    }
- ```   
-3. 删除卸载插件
-```java
-   /**
-    * 卸载删除插件
-    * @param pluginName 插件名
-    * @param pluginVersion 插件版本
-    * @return 卸载删除成功
-    */
-   public boolean removeAndDestroy(String pluginName, String pluginVersion) {
-   
-   }
+### 2. 配置插件信息
+
+在`application.yml`中添加：
+```yaml
+plugin:
+  loadPath: /home/plugins     # 插件jar包扫描路径
+  enableSystemScan: true      # 启用系统扫描
 ```
-4.  查询所有已装配上的插件
 
+### 3. API使用指南
+
+核心接口类：`PluginService`
+
+#### 插件预加载
 ```java
-    /**
-     * 获取所有插件
-     * @return List<PluginConfigVO>
-     */
-    public List<PluginConfigVO> queryAllPlugin() {
-        
-    }
+PluginConfigVO config = pluginService.preLoad(jarPath);
 ```
-#### 5. 测试插件jar包开发，可以参考插件demo  https://github.com/Estelle925/spring-plugin-demo
-##### 引入插件api依赖
-![img.png](img.png)
 
-##### 创建插件定义config类，标识插件信息
-![img_1.png](img_1.png)
+#### 加载并注册插件
+```java
+// 指定版本加载
+boolean success = pluginService.loadAndRegister(jarPath, pluginName, version);
 
-##### 定义demo插件controller测试
-![img_2.png](img_2.png)
+// 快速加载
+boolean success = pluginService.loadAndRegister(jarPath);
+```
+
+#### 卸载插件
+```java
+boolean success = pluginService.removeAndDestroy(pluginName, version);
+```
+
+#### 查询已加载插件
+```java
+List<PluginConfigVO> plugins = pluginService.queryAllPlugin();
+```
+
+## 📚 相关资源
+
+- [插件开发API](https://github.com/Estelle925/spring-plugin-load-api)
+- [插件开发Demo](https://github.com/Estelle925/spring-plugin-demo)
+
+## ⚠️ 注意事项
+
+- 插件配置为必填项，否则系统无法启动扫描
+- 目前暂不支持切面类的动态加载
+- 建议在开发插件时严格遵循示例规范
+
+## 📄 开发插件示例
+
+1. 引入插件API依赖
+2. 创建插件配置类定义插件信息
+3. 开发业务功能（Controller、Service等）
+
+详细示例请参考[插件开发Demo](https://github.com/Estelle925/spring-plugin-demo)
+
+## 🤝 贡献
+
+欢迎提交Issue和Pull Request！
+
+---
+
+如果这个项目对你有帮助，请给个 ⭐️ 鼓励一下~
